@@ -9,14 +9,14 @@ class MentalMathLayout(BoxLayout):
     
     response = StringProperty(None)
     response_label = ObjectProperty(None)
-    
+   
     problem = TwoDigitAddition()
     a = StringProperty("")
     b = StringProperty("")
     answer = StringProperty("")
     operator = StringProperty("")
     
-    def generate(self):
+    def _generate(self):
         self.problem.generate()
         self.a = str(self.problem.a)
         self.b = str(self.problem.b)
@@ -26,24 +26,34 @@ class MentalMathLayout(BoxLayout):
     def clear(self):
         self.response = ""
         
-    def next(self):
+    def next(self, *args):
         self.clear()
-        self.generate()
+        self._generate()
+        
+    def enter(self):
+        # Check the response
+        if self.response == self.answer:
+            self.correct()
+        else:
+            self.incorrect()
         
     def correct(self):
-        correct_str = "%s %s %s = %s   Good job!" % (self.a, self.operator, self.b, self.answer)
+        # Show the response
+        correct_str = "Correct! %s %s %s = %s" % (self.a, self.operator, self.b, self.answer)
         self.response = correct_str
+        
+        Clock.schedule_once(self.next, 1)
+        
+    def incorrect(self):
+        incorrect_str = "%s is incorrect. %s %s %s = %s" % (self.response, self.a, self.operator, self.b, self.answer)
+        self.response = incorrect_str
+        
+        Clock.schedule_once(self.next, 1)
         
     def on_press(self, button_value):
         self.response = self.response + str(button_value)
-        
-        def check_answer(*args):
-            if self.response == self.answer:
-                self.correct()
-        
-        Clock.schedule_once(check_answer, 1)
 
-class AnswerLabel(Label):
+class ResponseLabel(Label):
     pass
 
 class MentalMathApp(App):
@@ -51,7 +61,7 @@ class MentalMathApp(App):
     def build(self):
         
         layout = MentalMathLayout()
-        layout.generate()
+        layout.next()
         return layout
         
 if __name__ == '__main__':

@@ -17,12 +17,13 @@
             text: ""
         Label:
             text: root.a
+            text_size: self.width, self.height
         Label:
             text: root.operator
         Label:
             text: root.b
 
-    AnswerLabel:
+    ResponseLabel:
         id: response_label
         size_hint_y: .10
         text: root.response
@@ -69,10 +70,11 @@
             text: "0"
             on_press: root.on_press(0)
         Button:
-            text: "Next"
-            on_press: root.next()
+            text: "Enter"
+            on_press: root.enter()
+            disabled: root.response == ""
 
-<AnswerLabel>:
+<ResponseLabel>:
     canvas.before:
         Color:
             rgb: 1, 1, 1, 1
