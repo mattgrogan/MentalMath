@@ -2,9 +2,11 @@ from __future__ import division
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
+from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from kivy.animation import Animation
+from navigationdrawer import NavigationDrawer
 from problems import TwoDigitAddition
 
 class MentalMathLayout(BoxLayout):
@@ -74,9 +76,20 @@ class AnimatedLabel(Label):
 class MentalMathApp(App):
     
     def build(self):
+        layout = NavigationDrawer()
         
-        layout = MentalMathLayout()
-        layout.next()
+        layout.anim_type = 'slide_above_simple'
+
+        side_panel = BoxLayout(orientation='vertical')
+        side_panel.add_widget(Label(text='Panel label'))
+        side_panel.add_widget(Button(text='A button'))
+        side_panel.add_widget(Button(text='Another button'))
+        layout.add_widget(side_panel)
+        
+        main_panel = MentalMathLayout()
+        main_panel.next()
+        
+        layout.add_widget(main_panel)
         return layout
         
 if __name__ == '__main__':
