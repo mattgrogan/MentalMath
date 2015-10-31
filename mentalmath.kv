@@ -27,7 +27,7 @@
             size_hint_x: 0.70
 
         Label:
-            text: "right"
+            text: ""
             size_hint_x: 0.15
 
 <SidePanel>:
@@ -190,9 +190,11 @@
         Button:
             text: "Clear"
             on_press: root.clear()
+            disabled: root.response == ""
         Button:
             text: "0"
             on_press: root.on_press(0)
         Button:
             text: "Enter"
             on_press: root.enter()
+            disabled: root.response == ""
