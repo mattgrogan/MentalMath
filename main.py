@@ -2,7 +2,6 @@ from __future__ import division
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
-from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.stacklayout import StackLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
@@ -55,10 +54,18 @@ class MentalMathLayout(BoxLayout):
         
     def update_stats(self):
         self.nbr_total = self.nbr_correct + self.nbr_incorrect
-        self.pct_correct = "{0:.0f}%".format(self.nbr_correct / self.nbr_total * 100)
+        if self.nbr_total > 0:
+            self.pct_correct = "{0:.0f}%".format(self.nbr_correct / self.nbr_total * 100)
+        else:
+            self.pct_correct = "-"
         
     def on_press(self, button_value):
         self.response = self.response + str(button_value)
+        
+    def reset_score(self):
+        self.nbr_correct = 0
+        self.nbr_incorrect = 0
+        self.update_stats()
 
 class AnimatedLabel(Label):
     
@@ -78,7 +85,7 @@ class BaseLayout(BoxLayout):
     menu_button = ObjectProperty(None)
 
 class SidePanel(StackLayout):
-    pass
+    reset_score = ObjectProperty(None)
 
 class MentalMathApp(App):
     
@@ -86,21 +93,20 @@ class MentalMathApp(App):
         
         base_layout = BaseLayout()
         
-        drawer_layout = NavigationDrawer()
+        navigation = NavigationDrawer()
+        navigation.anim_type = 'slide_above_simple'
         
-        base_layout.menu_button.bind(on_press = lambda j: drawer_layout.toggle_state())
+        base_layout.menu_button.bind(on_press = lambda j: navigation.toggle_state())
         
-        drawer_layout.anim_type = 'slide_above_simple'
-
         side_panel = SidePanel()
-        drawer_layout.add_widget(side_panel)
+        navigation.add_widget(side_panel)
         
         main_panel = MentalMathLayout()
         main_panel.next()
+        side_panel.reset_score.bind(on_press = lambda j: main_panel.reset_score())
+        navigation.add_widget(main_panel)
         
-        drawer_layout.add_widget(main_panel)
-        
-        base_layout.add_widget(drawer_layout)
+        base_layout.add_widget(navigation)
         return base_layout
         
 if __name__ == '__main__':
