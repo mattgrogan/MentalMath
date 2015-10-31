@@ -1,8 +1,10 @@
 from __future__ import division
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
+from kivy.animation import Animation
 from problems import TwoDigitAddition
 
 class MentalMathLayout(BoxLayout):
@@ -10,6 +12,7 @@ class MentalMathLayout(BoxLayout):
     response = StringProperty(None)
     response_label = ObjectProperty(None)
     problem = StringProperty(None)
+    incorrect_label = ObjectProperty(None)
     
     nbr_correct = NumericProperty(0)
     nbr_incorrect = NumericProperty(0)
@@ -36,21 +39,16 @@ class MentalMathLayout(BoxLayout):
             self.incorrect()
         
     def correct(self):
-        # Show the response
-        correct_str = "Correct!"
-        self.response = correct_str
         self.nbr_correct += 1
         self.update_stats()
         
-        Clock.schedule_once(self.next, 1)
+        Clock.schedule_once(self.next, 0.20)
         
     def incorrect(self):
-        incorrect_str = "Incorrect"
-        self.response = incorrect_str
         self.nbr_incorrect += 1
         self.update_stats()
         
-        Clock.schedule_once(self.next, 1)
+        Clock.schedule_once(self.next, 0.20)
         
     def update_stats(self):
         self.nbr_total = self.nbr_correct + self.nbr_incorrect
@@ -58,6 +56,20 @@ class MentalMathLayout(BoxLayout):
         
     def on_press(self, button_value):
         self.response = self.response + str(button_value)
+
+class AnimatedLabel(Label):
+    
+    text = StringProperty(None)
+    
+    def __init__(self, **kwargs):
+        super(AnimatedLabel, self).__init__(**kwargs)
+        self.bind(text=self.animate)
+    
+    def animate(self, *args):
+
+        animation = Animation(opacity = 0.75, duration = 0.10)
+        animation += Animation(opacity = 1.00, duration = 0.10)
+        animation.start(self.canvas)
 
 class MentalMathApp(App):
     

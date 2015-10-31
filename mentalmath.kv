@@ -51,7 +51,7 @@
                     pos: self.pos
                     size: self.size
         Label:
-            text: "Pct Correct"
+            text: "%"
             color: get_color_from_hex("#FFFFFF")
             canvas.before:
                 Color: 
@@ -60,7 +60,7 @@
                     pos: self.pos
                     size: self.size
 
-        Label:
+        AnimatedLabel:
             text: str(root.nbr_correct)
             color: get_color_from_hex("#000000")
             canvas.before:
@@ -69,7 +69,8 @@
                 Rectangle:
                     pos: self.pos
                     size: self.size
-        Label:
+        AnimatedLabel:
+            id: incorrect_label
             text: str(root.nbr_incorrect)
             color: get_color_from_hex("#000000")
             canvas.before:
@@ -124,7 +125,7 @@
         color: [0, 0, 0, 1]
         canvas.before:
             Color:
-                rgb: get_color_from_hex("#C5CAE9")
+                rgb: get_color_from_hex("#CFD8DC")
             Rectangle:
                 pos: self.pos
                 size: self.size
