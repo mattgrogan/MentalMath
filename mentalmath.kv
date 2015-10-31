@@ -1,30 +1,39 @@
 #:kivy 1.0.9
 
 <MentalMathLayout>:
-    answer: answer_text
-    answer_value: ""
+    response: ""
+    response_label: response_label
 
     orientation: "vertical"
 
     Label:
-        text: "Hello World!"
+        text: "Mental Math"
         size_hint_y: .10
 
     GridLayout:
         cols: 2
-        size_hint_y: .35
+        size_hint_y: .40
         Label:
-            text: "a"
+            text: ""
         Label:
-            text: "b"
+            text: root.a
         Label:
-            text: "c"
+            text: root.operator
         Label:
-            text: "d"
+            text: root.b
+
+    AnswerLabel:
+        id: response_label
+        size_hint_y: .10
+        text: root.response
+        text_size: self.size
+        halign: 'right'
+        valign: 'middle'
+        color: [0, 0, 0, 1]
 
     GridLayout:
         cols: 3
-        size_hint_y: .35
+        size_hint_y: .40
         
         Button:
             text: "1"
@@ -53,13 +62,20 @@
         Button:
             text: "9"
             on_press: root.on_press(9)
+        Button:
+            text: "Clear"
+            on_press: root.clear()
+        Button:
+            text: "0"
+            on_press: root.on_press(0)
+        Button:
+            text: "Next"
+            on_press: root.next()
 
-    Label:
-        id: answer_text
-        size_hint_y: .10
-        text: root.answer_value
-
-    Button:
-        size_hint_y: .10
-        text: "Clear"
-        on_press: root.clear()
+<AnswerLabel>:
+    canvas.before:
+        Color:
+            rgb: 1, 1, 1, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
