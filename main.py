@@ -1,9 +1,8 @@
+from __future__ import division
 from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-from kivy.properties import StringProperty, ObjectProperty
-from kivy.utils import get_color_from_hex
+from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from problems import TwoDigitAddition
 
 class MentalMathLayout(BoxLayout):
@@ -11,6 +10,11 @@ class MentalMathLayout(BoxLayout):
     response = StringProperty(None)
     response_label = ObjectProperty(None)
     problem = StringProperty(None)
+    
+    nbr_correct = NumericProperty(0)
+    nbr_incorrect = NumericProperty(0)
+    nbr_total = NumericProperty(0)
+    pct_correct = StringProperty("-")
    
     def generate(self):
         pg = TwoDigitAddition()
@@ -35,20 +39,25 @@ class MentalMathLayout(BoxLayout):
         # Show the response
         correct_str = "Correct!"
         self.response = correct_str
+        self.nbr_correct += 1
+        self.update_stats()
         
         Clock.schedule_once(self.next, 1)
         
     def incorrect(self):
         incorrect_str = "Incorrect"
         self.response = incorrect_str
+        self.nbr_incorrect += 1
+        self.update_stats()
         
         Clock.schedule_once(self.next, 1)
         
+    def update_stats(self):
+        self.nbr_total = self.nbr_correct + self.nbr_incorrect
+        self.pct_correct = "{0:.0f}%".format(self.nbr_correct / self.nbr_total * 100)
+        
     def on_press(self, button_value):
         self.response = self.response + str(button_value)
-
-class ResponseLabel(Label):
-    pass
 
 class MentalMathApp(App):
     
