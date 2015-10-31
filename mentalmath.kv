@@ -1,6 +1,8 @@
 #:kivy 1.0.9
+#:import get_color_from_hex kivy.utils.get_color_from_hex
 
 <MentalMathLayout>:
+    problem: ""
     response: ""
     response_label: response_label
 
@@ -9,21 +11,110 @@
     Label:
         text: "Mental Math"
         size_hint_y: .10
+        color: get_color_from_hex("#FFFFFF")
+        canvas.before:
+            Color: 
+                rgb: get_color_from_hex("#283593")
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
     GridLayout:
-        cols: 2
-        size_hint_y: .40
+        cols: 4
+        size_hint_y: .25
+
         Label:
-            text: ""
+            text: "Correct"
+            color: get_color_from_hex("#FFFFFF")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#4CAF50")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
         Label:
-            text: root.a
-            text_size: self.width, self.height
+            text: "Incorrect"
+            color: get_color_from_hex("#FFFFFF")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#F44336")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
         Label:
-            text: root.operator
+            text: "Total"
+            color: get_color_from_hex("#FFFFFF")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#3F51B5")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
         Label:
-            text: root.b
+            text: "Pct Correct"
+            color: get_color_from_hex("#FFFFFF")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#009688")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+        Label:
+            text: "Correct"
+            color: get_color_from_hex("#000000")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#C8E6C9")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "Incorrect"
+            color: get_color_from_hex("#000000")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#EF9A9A")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "Total"
+            color: get_color_from_hex("#000000")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#9FA8DA")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+        Label:
+            text: "Pct Correct"
+            color: get_color_from_hex("#000000")
+            canvas.before:
+                Color: 
+                    rgb: get_color_from_hex("#80CBC4")
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
 
     ResponseLabel:
+        id: problem_label
+        size_hint_y: .25
+        text: root.problem
+        text_size: self.size
+        font_size: sp(25)
+        padding: sp(10), sp(10)
+        halign: 'right'
+        valign: 'bottom'
+        color: [0, 0, 0, 1]
+        canvas.before:
+            Color:
+                rgb: get_color_from_hex("#FFFFFF")
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+    Label:
         id: response_label
         size_hint_y: .10
         text: root.response
@@ -31,6 +122,12 @@
         halign: 'right'
         valign: 'middle'
         color: [0, 0, 0, 1]
+        canvas.before:
+            Color:
+                rgb: get_color_from_hex("#C5CAE9")
+            Rectangle:
+                pos: self.pos
+                size: self.size
 
     GridLayout:
         cols: 3
@@ -72,12 +169,3 @@
         Button:
             text: "Enter"
             on_press: root.enter()
-            disabled: root.response == ""
-
-<ResponseLabel>:
-    canvas.before:
-        Color:
-            rgb: 1, 1, 1, 1
-        Rectangle:
-            pos: self.pos
-            size: self.size

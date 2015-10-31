@@ -1,0 +1,3 @@
+title=Mental Math
+author=Matthew Grogan
+orientation=portrait
