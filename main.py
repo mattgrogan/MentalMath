@@ -4,6 +4,7 @@ from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.stacklayout import StackLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from kivy.animation import Animation
 from navigationdrawer import NavigationDrawer
@@ -74,6 +75,9 @@ class AnimatedLabel(Label):
         animation.start(self.canvas)
 
 class BaseLayout(BoxLayout):
+    menu_button = ObjectProperty(None)
+
+class SidePanel(StackLayout):
     pass
 
 class MentalMathApp(App):
@@ -82,22 +86,21 @@ class MentalMathApp(App):
         
         base_layout = BaseLayout()
         
-        layout = NavigationDrawer()
+        drawer_layout = NavigationDrawer()
         
-        layout.anim_type = 'slide_above_simple'
+        base_layout.menu_button.bind(on_press = lambda j: drawer_layout.toggle_state())
+        
+        drawer_layout.anim_type = 'slide_above_simple'
 
-        side_panel = BoxLayout(orientation='vertical')
-        side_panel.add_widget(Label(text='Panel label'))
-        side_panel.add_widget(Button(text='A button'))
-        side_panel.add_widget(Button(text='Another button'))
-        layout.add_widget(side_panel)
+        side_panel = SidePanel()
+        drawer_layout.add_widget(side_panel)
         
         main_panel = MentalMathLayout()
         main_panel.next()
         
-        layout.add_widget(main_panel)
+        drawer_layout.add_widget(main_panel)
         
-        base_layout.add_widget(layout)
+        base_layout.add_widget(drawer_layout)
         return base_layout
         
 if __name__ == '__main__':

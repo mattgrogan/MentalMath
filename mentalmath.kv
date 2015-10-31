@@ -4,6 +4,7 @@
 
 <BaseLayout>:
     orientation: "vertical"
+    menu_button: menu_button
 
     GridLayout:
         cols: 4
@@ -16,8 +17,9 @@
                 pos: self.pos
                 size: self.size
 
-        Label:
-            text: "[menu]"
+        Button:
+            id: menu_button
+            text: "Menu"
             size_hint_x: 0.15
 
         Label:
@@ -27,6 +29,11 @@
         Label:
             text: "right"
             size_hint_x: 0.15
+
+<SidePanel>:
+    Button:
+        text: "Reset Score"
+        size_hint: 1.00, 0.10
 
 <MentalMathLayout>:
     problem: ""
