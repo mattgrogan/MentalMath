@@ -2,16 +2,12 @@
 #:import get_color_from_hex kivy.utils.get_color_from_hex
 #:import NavigationDrawer navigationdrawer.NavigationDrawer
 
-<MentalMathLayout>:
-    problem: ""
-    response: ""
-    response_label: response_label
-
+<BaseLayout>:
     orientation: "vertical"
 
-    Label:
-        text: "Mental Math"
-        size_hint_y: .10
+    GridLayout:
+        cols: 4
+        size_hint_y: 0.10
         color: get_color_from_hex("#FFFFFF")
         canvas.before:
             Color: 
@@ -19,6 +15,25 @@
             Rectangle:
                 pos: self.pos
                 size: self.size
+
+        Label:
+            text: "[menu]"
+            size_hint_x: 0.15
+
+        Label:
+            text: "Mental Math"
+            size_hint_x: 0.70
+
+        Label:
+            text: "right"
+            size_hint_x: 0.15
+
+<MentalMathLayout>:
+    problem: ""
+    response: ""
+    response_label: response_label
+
+    orientation: "vertical"
 
     GridLayout:
         cols: 4

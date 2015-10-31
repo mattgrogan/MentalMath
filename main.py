@@ -73,9 +73,15 @@ class AnimatedLabel(Label):
         animation += Animation(opacity = 1.00, duration = 0.10)
         animation.start(self.canvas)
 
+class BaseLayout(BoxLayout):
+    pass
+
 class MentalMathApp(App):
     
     def build(self):
+        
+        base_layout = BaseLayout()
+        
         layout = NavigationDrawer()
         
         layout.anim_type = 'slide_above_simple'
@@ -90,7 +96,9 @@ class MentalMathApp(App):
         main_panel.next()
         
         layout.add_widget(main_panel)
-        return layout
+        
+        base_layout.add_widget(layout)
+        return base_layout
         
 if __name__ == '__main__':
     MentalMathApp().run()
