@@ -3,11 +3,54 @@ from kivy.app import App
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.stacklayout import StackLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from kivy.animation import Animation
 from navigationdrawer import NavigationDrawer
-from problems import TwoDigitAddition
+from problems import Addition_1x1
+from kivy.uix.settings import SettingsWithNoMenu
+
+import json
+
+settings_json = json.dumps([
+    {'type': 'title',
+     'title': 'Addition'},
+
+    {'type': 'bool',
+     'title': '1 by 1',
+     'desc': 'Single Digit Addition',
+     'section': 'problem_types',
+     'key': 'add_1x1'},
+     
+     
+    {'type': 'title',
+     'title': 'example title'},
+    {'type': 'bool',
+     'title': 'A boolean setting',
+     'desc': 'Boolean description text',
+     'section': 'example',
+     'key': 'boolexample'},
+    {'type': 'numeric',
+     'title': 'A numeric setting',
+     'desc': 'Numeric description text',
+     'section': 'example',
+     'key': 'numericexample'},
+    {'type': 'options',
+     'title': 'An options setting',
+     'desc': 'Options description text',
+     'section': 'example',
+     'key': 'optionsexample',
+     'options': ['option1', 'option2', 'option3']},
+    {'type': 'string',
+     'title': 'A string setting',
+     'desc': 'String description text',
+     'section': 'example',
+     'key': 'stringexample'},
+    {'type': 'path',
+     'title': 'A path setting',
+     'desc': 'Path description text',
+     'section': 'example',
+     'key': 'pathexample'}])
 
 class MentalMathLayout(BoxLayout):
     
@@ -22,7 +65,7 @@ class MentalMathLayout(BoxLayout):
     pct_correct = StringProperty("-")
    
     def generate(self):
-        pg = TwoDigitAddition()
+        pg = Addition_1x1()
         self.problem = "%s\n%s %s" % (pg.a, pg.operator, pg.b)
         self.answer = str(pg.answer)
 
@@ -84,12 +127,14 @@ class AnimatedLabel(Label):
 class BaseLayout(BoxLayout):
     menu_button = ObjectProperty(None)
 
-class SidePanel(StackLayout):
+class SidePanel(GridLayout):
     reset_score = ObjectProperty(None)
 
 class MentalMathApp(App):
-    
+  
     def build(self):
+        self.settings_cls = "SettingsWithNoMenu"
+        self.use_kivy_settings = False
         
         base_layout = BaseLayout()
         
@@ -100,14 +145,43 @@ class MentalMathApp(App):
         
         side_panel = SidePanel()
         navigation.add_widget(side_panel)
-        
+        self.side_panel = side_panel
+        self.open_settings()
+
         main_panel = MentalMathLayout()
         main_panel.next()
-        side_panel.reset_score.bind(on_press = lambda j: main_panel.reset_score())
+        #side_panel.reset_score.bind(on_press = lambda j: main_panel.reset_score())
         navigation.add_widget(main_panel)
         
         base_layout.add_widget(navigation)
+        
+        problem_types = self.config.items("problem_types")
+        problem_types = filter(lambda a: a[1]=='1', problem_types)
+        print(problem_types)
+        
         return base_layout
+        
+    def display_settings(self, settings):
+        self.side_panel.add_widget(settings)
+        return True
+        
+    def build_config(self, config):
+        config.setdefaults('problem_types', {
+            'add_1x1': 1            
+        })
+        config.setdefaults('example', {
+            'boolexample': 1,
+            'numericexample': 10,
+            'optionsexample': 'option2',
+            'stringexample': 'some-string',
+            'pathexample': '/some/path'        
+        })
+        
+    def build_settings(self, settings):
+        settings.add_json_panel('Panel Name', self.config, data=settings_json)
+        
+    def on_config_change(self, config, section, key, value):
+        print config, section, key, value
         
 if __name__ == '__main__':
     MentalMathApp().run()
