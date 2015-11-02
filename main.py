@@ -7,7 +7,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.properties import StringProperty, ObjectProperty, NumericProperty
 from kivy.animation import Animation
 from navigationdrawer import NavigationDrawer
-from problems import Addition_1x1
+from problems import problem_factory
 from kivy.uix.settings import SettingsWithNoMenu
 
 import json
@@ -21,36 +21,36 @@ settings_json = json.dumps([
      'desc': 'Single Digit Addition',
      'section': 'problem_types',
      'key': 'add_1x1'},
-     
-     
-    {'type': 'title',
-     'title': 'example title'},
     {'type': 'bool',
-     'title': 'A boolean setting',
-     'desc': 'Boolean description text',
-     'section': 'example',
-     'key': 'boolexample'},
-    {'type': 'numeric',
-     'title': 'A numeric setting',
-     'desc': 'Numeric description text',
-     'section': 'example',
-     'key': 'numericexample'},
-    {'type': 'options',
-     'title': 'An options setting',
-     'desc': 'Options description text',
-     'section': 'example',
-     'key': 'optionsexample',
-     'options': ['option1', 'option2', 'option3']},
-    {'type': 'string',
-     'title': 'A string setting',
-     'desc': 'String description text',
-     'section': 'example',
-     'key': 'stringexample'},
-    {'type': 'path',
-     'title': 'A path setting',
-     'desc': 'Path description text',
-     'section': 'example',
-     'key': 'pathexample'}])
+     'title': '2 by 2',
+     'desc': 'Two Digit Addition',
+     'section': 'problem_types',
+     'key': 'add_2x2'},
+    {'type': 'bool',
+     'title': '3 by 3',
+     'desc': 'Triple Digit Addition',
+     'section': 'problem_types',
+     'key': 'add_3x3'},     
+
+    {'type': 'title',
+     'title': 'Subtraction'},
+
+    {'type': 'bool',
+     'title': '1 by 1',
+     'desc': 'Single Digit Subtraction',
+     'section': 'problem_types',
+     'key': 'subt_1x1'},
+    {'type': 'bool',
+     'title': '2 by 2',
+     'desc': 'Two Digit Subtraction',
+     'section': 'problem_types',
+     'key': 'subt_2x2'},
+    {'type': 'bool',
+     'title': '3 by 3',
+     'desc': 'Triple Digit Subtraction',
+     'section': 'problem_types',
+     'key': 'subt_3x3'},       
+     ])
 
 class MentalMathLayout(BoxLayout):
     
@@ -65,7 +65,9 @@ class MentalMathLayout(BoxLayout):
     pct_correct = StringProperty("-")
    
     def generate(self):
-        pg = Addition_1x1()
+        app = App.get_running_app()
+        problem_types = app.get_selected_problem_types()
+        pg = problem_factory(problem_types)
         self.problem = "%s\n%s %s" % (pg.a, pg.operator, pg.b)
         self.answer = str(pg.answer)
 
@@ -155,11 +157,12 @@ class MentalMathApp(App):
         
         base_layout.add_widget(navigation)
         
+        return base_layout
+        
+    def get_selected_problem_types(self):
         problem_types = self.config.items("problem_types")
         problem_types = filter(lambda a: a[1]=='1', problem_types)
-        print(problem_types)
-        
-        return base_layout
+        return problem_types
         
     def display_settings(self, settings):
         self.side_panel.add_widget(settings)
@@ -167,14 +170,12 @@ class MentalMathApp(App):
         
     def build_config(self, config):
         config.setdefaults('problem_types', {
-            'add_1x1': 1            
-        })
-        config.setdefaults('example', {
-            'boolexample': 1,
-            'numericexample': 10,
-            'optionsexample': 'option2',
-            'stringexample': 'some-string',
-            'pathexample': '/some/path'        
+            'add_1x1': 1,
+            'add_2x2': 1,
+            'add_3x3': 1,
+            'subt_1x1': 0,
+            'subt_2x2': 0,
+            'subt_3x3': 0
         })
         
     def build_settings(self, settings):
